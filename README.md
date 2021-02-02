@@ -18,7 +18,9 @@ If you already have R and RStudio installed on your computer, then please update
 
 ## Install/Update Packages
 
-Install or update the following packages:
+Before you can use this series of tutorials, you must install some packages in R.  See the instructions for [package installation from Modern Dive](https://moderndive.com/1-getting-started.html#package-installation) or 
+
+Install or update the following packages by copying the code below, pasting in the RStudio console, then clicking enter:
 
 ```
 install.packages("tidyverse")   
@@ -27,6 +29,7 @@ install.packages("ggbeeswarm")
 install.packages("learnr")   
 install.packages("gradethis")
 ```
+
 
 ## Tutorials
 
@@ -37,5 +40,5 @@ Here is a list of the tutorials available so far:
 * Why looking at data visually can be useful
 * how to install and load packages
 * Understand what a function is and how to use a function's help page
-* Use the `View()` function to look at data frames
+* Use the `View()` function to look at data frames   
 
