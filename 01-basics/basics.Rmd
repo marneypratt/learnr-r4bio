@@ -12,6 +12,7 @@ runtime: shiny_prerendered
 library(learnr)
 #devtools::install_github("rstudio-education/gradethis", force = TRUE)
 library(gradethis)
+library(ggplot2)
 
 #sets gradethis as exercise checker
 gradethis::gradethis_setup()
@@ -22,6 +23,8 @@ tutorial_options(exercise.reveal_solution = FALSE)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+# Intro to R for Biology:  Basics
+
 
 ## Introduction
 
@@ -29,94 +32,107 @@ Before getting started with this tutorial, it is useful to understand some of th
 
 ### Learning goals
 
-* Learn how to assign output to an object using the assignment operator `<-`
+* Why looking at data visually can be useful
+* how to install and load packages
 * Understand what a function is and how to use a function's help page
 * Use the `View()` function to look at data frames
 
 
+## Irises
 
-## R can do simple calculations
+*Iris* species can be difficult to tell apart in the field. Edgar Anderson measured the sepal and petal length and width of three species of *Iris* flowers to see if their flower morphology could be used to help distinguish species.  
 
-Let's start with something very simple. R can be used as an interactive calculator.
+```{r iris-pic, out.width = "70%"}
+knitr::include_graphics("images/iris.png")
+```
 
-Type `10 + 10` in the code chunk below and press **Run Code** to make sure your code works, and then click the **Submit Answer** button when you are ready to submit your answer.
 
-```{r addition, exercise=TRUE}
+Below is a "chunk" with some R code. Press the **Run Code** button to run the code and make a graph showing the petal width versus the petal length for three species of *Iris* flowers.
+
+```{r iris, exercise=TRUE}
+library(ggplot2)
+ggplot(data = iris, aes(x = Petal.Length, y = Petal.Width, color = Species)) +
+  geom_point(size = 3) +
+  ylab("Petal Width (cm)") +
+  xlab("Petal Length (cm)") +
+  theme_classic(base_size = 16)
 
 ```
 
-```{r addition-check}
-grade_result(
-  pass_if(~identical(.result, 20))
+
+```{r hypothesis}
+
+quiz(
+  question("Does the graph you get from the code above support the hypothesis that *Iris versicolor* is intermediate in size because it is a hybrid between *I. setosa* and *I. virginica*?",
+           answer("Yes, the data are consistent with the hypothesis, but these results alone are not sufficient to know the hypothesis is definitely true", correct=TRUE),
+           answer("No, the data are not consistent with the hypothesis"),
+           answer("Yes, the data are consistent and sufficient to support the hypothesis"),
+           answer("Yes, it is clear that *I. versicolor* is a hybrid because it is intermediate in petal size"),
+    allow_retry = TRUE,
+    random_answer_order = TRUE)
 )
-```
 
-R prints the result of 20 (note that the [1] is telling you that your output just has one row). 
-
-However, R is a programming language and often the reason we use a programming language as opposed to a calculator is to automate some process or avoid unnecessary repetition.
-
-## Assignment Opperator
-
-Let's say we want to use the result from one calculation in a second calculation. Instead of retyping 10 + 10 every time we need it, we can just create a new variable that stores the result in R's memory as an **object**.
-
-The way you assign a value to an object in R is by using the **assignment operator**, which is a ''less than'' symbol followed by a ''minus'' sign. It looks like this: `<-`
-
-Think of the assignment operator as an arrow. You are assigning the result of the code on the right side of the arrow to the object name on the left side of the arrow.
-
-Let's give the output of adding 10 + 10 an object name of `x`
-
-Press the **Run Code** button in the code chunk below
-
-```{r assign_opp1, exercise=TRUE}
-
-x <- 10 + 10
 
 ```
 
 
-You'll notice that R did not print the result of 20 this time. When you use the assignment operator, R assumes that you don't want to see the result immediately, but rather that you intend to use the result for something else later.
 
-You can ask R to print the value of your object by just typing the object in the code chunk.
+##   
 
-Press the **Run Code** button in the code chunk below
 
-```{r assign_opp2, exercise=TRUE}
+Biologists collect data to help answer questions of interest.  The **Intro to R for Biology** series of tutorials will help you learn just enough coding in R, data manipulation, data visualization, and descriptive statistics to get you started so you can start exploring data to answer questions. 
 
-x <- 10 + 10      
-x
+Some of the important topics this specific tutorial will cover include
 
+* packages
+* functions
+* help page
+* data frames
+
+
+## Packages
+
+One of the most important thing to know about is packages. R packages are a really powerful way to put a lot of useful code, documentation, and data together to make certain tasks easier to do.
+
+When you start a new R session, only certain packages are pre-loaded for you including the `base` R package and several others. But many other useful packages must be installed (once) and then loaded (every time you restart R) for you to be able to use them. A good analogy is how you have to download an app onto your computer or phone once to install it, but then you have to actually open the app each time you want to use it.
+
+To install a package we use the code `install.packages("packageName")` - and remember, you only have to do this **ONCE** for a package on a particular computer
+
+To load a package (open it up and use it) we use the code `library(packageName)` - and we need to do this **EVERY TIME** we want to use this package in a new session (a new session starts when you open RStudio to use it, and you can also restart R to start a new session under the "Session" menu item in RStudio)
+
+For more background information on packages, see [What are R Packages?](https://moderndive.com/1-getting-started.html#packages)
+
+##
+
+The code we used to graph the *Iris* petal data had some important features you will need to know to make your own graphs.  Here is the code we ran before:
+
+```{r iris2, echo=TRUE, eval=FALSE}
+library(ggplot2)
+ggplot(data = iris, aes(x = Petal.Length, y = Petal.Width, color = Species)) +
+  geom_point(size = 3) +
+  ylab("Petal Width (cm)") +
+  xlab("Petal Length (cm)") +
+  theme_classic(base_size = 16)
 ```
 
+Notice we did NOT use `install.packages()` in this code because the package had already been installed.
 
-You'll notice that R now gives the result of 20 again.
+We did use `library(ggplot2)` because we needed to load the `ggplot2` package (which is the main graphing package we will use in this course)
 
+You might notice that there are a lot different words followed by parentheses.  These words followed by parentheses are called functions.
 
-## Objects 
+`library()` is a function what loads the package inside the parentheses.
 
+`ggplot()` is a function from the `ggplot2` package that makes graphs using the code that follows it (including additional functions)
 
-When you assign the result of some code to an object, the real advantage is that you can use that object name as a shortcut to the result of that code.
+If we want to be really clear what package a function comes from, we use a double colon between the package and function name `package::function()` so in this example it would be `ggplot2::ggplot()`
 
-```{r assign_opp3, exercise=TRUE, exercise.setup = "assign_opp1"}
-
-x - 12
-
-```
-
-Since we stored the result of 10 + 10 in an object called `x`, then `x - 12` is 20 - 12 which is 8.
-
-
-For now, just think about an object as a way to store things (values, lists, functions, etc) in R's memory.
-
-
-There are lots of types of objects in R. Here are some resources to learn more about objects in R
-
-* [Objects](https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Objects): definition and types of objects
-* [What's in a name?](https://r4ds.had.co.nz/workflow-basics.html#whats-in-a-name): some rules about how to name objects (No spaces!)
+We will come back to learning more about how to make graphs with `ggplot2` in later tutorials.  Let's learn more about some of the basic tools you will need to be able to make your own beautiful and informative graphs.
 
 
 ## Functions
 
-R can do a LOT more than simple calculations.  One power of R is that you can also create functions that summarizes a bunch of lines of code together.
+One power of R is that you can also create functions that summarizes a bunch of lines of code together.
 
 A function consists of the name of the function and then the augments you can use as inputs for the function in parentheses. 
 
@@ -142,10 +158,14 @@ sqrt(625)
 
 ```{r sqrt-check}
 
-grade_code()
+grade_this_code()
 
 ```
 
+R prints the result of 25 (note that the [1] is telling you that your output just has one row). 
+
+
+## 
 
 sqrt() is a fairly simple function.  But let's say you are not sure how to use the function.  You can open a help document that will describe how to use the function.  
 
@@ -170,6 +190,7 @@ See this link [Calling functions](https://r4ds.had.co.nz/workflow-basics.html#ca
 
 Sometimes the help document doesn't tell you what you want to know.  Don't feel shy about doing an internet search for more helpful answers and examples.  All of us (even the most experienced programmers) turn to the internet and other resources for help.
 
+
 ## Intro to Data Frames
 
 We often want to use R to analyze a larger dataset that has many rows and columns.  We are going to skip over the basics of vectors, lists, and matrices for now, but you can look at this link about [Data Types](https://www.statmethods.net/input/datatypes.html) for a quick overview of different R data types including vectors, matrices, lists, data frames, etc
@@ -177,7 +198,7 @@ We often want to use R to analyze a larger dataset that has many rows and column
 In this course, we are going to focus on **data frames**.  A data frame is a "spreadsheet"-type of dataset where each row is an observation and each column is a different variable.
 
 
-Let's use the function View() to look at a data frame called iris.
+Let's use the function View() to look at the data frame for the *Iris* flower dataset that we graphed before.
 
 ```{r view, exercise=TRUE, message=FALSE}
 View(iris)
@@ -211,7 +232,7 @@ Call up the help file for the View() function.
 
 
 ```{r View_help-check}
-grade_code()
+grade_this_code()
 ```
 
 
@@ -262,7 +283,7 @@ Use the code chunk below to open a help page for the `iris` data frame
 
 
 ```{r iris_help-check}
-grade_code()
+grade_this_code()
 ```
 
 
@@ -301,18 +322,24 @@ If you are not already familiar, it would be worth spending some time understand
 Click here for a link to an article that can get you started on informing yourself about the links between genetics, statistics, and eugenics. [Eugenics and the Ethics of Statistical Analysis](http://gppreview.com/2019/12/16/eugenics-ethics-statistical-analysis/)
 
 
-### Conclusion
+## Conclusion
 
-There is more to learn before you can use R for data analysis.  Hopefully this lesson got you started on understanding a few basic things about how R works.
+There is more to learn before you can use R for data analysis and making your own graphs.  Hopefully this lesson got you started on understanding a few basic things about how R works.
 
 
+Now get ready for the Learning R Roller Coaster - it is a wild ride but totally worth it!
+
+```{r rollercoaster, out.width = "90%"}
+knitr::include_graphics("images/Rrollercoaster.png")
+```
+
+Artwork by [Allison Horst](https://github.com/allisonhorst/stats-illustrations)
 
 ## References
 
 
 * [Chapter 1 Getting Started with Data in R](https://moderndive.com/1-getting-started.html) from the Modern Dive online textbook to get a basic introduction.
-* [Objects](https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Objects): definition and types of objects
-* [What's in a name?](https://r4ds.had.co.nz/workflow-basics.html#whats-in-a-name): some rules about how to name objects (No spaces!)
+* [What are R Packages?](https://moderndive.com/1-getting-started.html#packages) from the Modern Dive online textbook
 * [Calling functions](https://r4ds.had.co.nz/workflow-basics.html#calling-functions) to help understand the basics of what a function is and how to use it
 * [Data Types](https://www.statmethods.net/input/datatypes.html) for a quick overview of different R data types including vectors, matrices, lists, data frames, etc
 * [Eugenics and the Ethics of Statistical Analysis](http://gppreview.com/2019/12/16/eugenics-ethics-statistical-analysis/)
