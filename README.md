@@ -26,8 +26,11 @@ Install or update the following packages by copying the code below, pasting in t
 install.packages("tidyverse")   
 install.packages("ggfortify")   
 install.packages("ggbeeswarm")  
-install.packages("learnr")   
-install.packages("gradethis")
+install.packages("learnr") 
+install.packages("devtools")
+devtools::install_github('rstudio/htmltools')
+devtools::install_github("rstudio-education/gradethis", force = TRUE)
+
 ```
 
 
