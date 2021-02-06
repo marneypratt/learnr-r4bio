@@ -17,6 +17,7 @@ library(gradethis)
 library(readr)
 library(dplyr)
 library(ggplot2)
+library(here)
 
 #sets gradethis as exercise checker
 gradethis::gradethis_setup()
@@ -42,10 +43,9 @@ This tutorial helps you learn some tools to import and investigate the structure
 ### Learning goals
 
 * Learn about objects and data types in R
-* Learn about several functions to help investigate the structure of a data frame
-* 
-* 
-* 
+* Use several functions to help investigate the structure of a data frame
+* Understand what tidy data is
+* Practice importing a csv file
 
 
 
@@ -70,7 +70,7 @@ Here are some resources to learn more about objects in R
 
 ## Data Types
 
-To understand more about the structure of a data frame, it is useful to know about types of data.  You can think of a data frame like a bunch of vectors stuck together, where each column is a former vector that has been glued to others.
+As you saw in the previous section, a data frame can be made of different types of data.  You can think of a data frame like a bunch of vectors stuck together, where each column is a former vector that has been glued to others.
 
 There are six basic types each of which can make up a vector: **logical** (true/false/NA), **integer** (whole numbers), **double** (decimal number), **character** (string of text and/or numerals), **complex** (real + imaginary numbers), and **raw** (raw bytes of data as hexidecimal). Integer and double data types are both categorized as **numeric**.
 
@@ -89,6 +89,8 @@ You can click here to [learn more about vectors in R](https://r4ds.had.co.nz/vec
 
 ## Data Structure
 
+Now let's start looking at the structure of data frames. 
+
 When we load or import data into R, you will need to know the following to make sure your data has correctly loaded:
 
 1. number of observations (=rows), 
@@ -97,7 +99,7 @@ When we load or import data into R, you will need to know the following to make 
 4. if there are categorical variables (=factors) that have different groups, then they have the right number of groups with the right labels (=levels)
 
 
-Let's start with a built-in dataset to make sure you are familiar with the structure of datasets for use in R.  We will use the iris data to start with.
+We will begin with a built-in iris dataset to make sure you are familiar with the structure of datasets for use in R.  
 
 We can check the number of rows and columns in a dataset using the `dim()` function.
 
@@ -128,7 +130,7 @@ head(iris)
 
 ##
 
-We can look at the structure of the data frame more holistically by using the `str()` function. 
+The `str()` function allows us to look at the structure of the data frame more holistically.
 
 ```{r structure, exercise=TRUE, message=FALSE}
 
@@ -140,141 +142,249 @@ str(iris)
 The `str()` function gives the type of object and then the number of rows and columns on the first line. Then it lists each column and gives the variable name, variable type (numeric, factors, etc) and the first few values for the variable.  For factors it also gives the number of levels and the names of the first few levels.
 
 
+```{r iris-quiz}
+
+quiz(
+  question("Which variable in the iris data frame is a factor?",
+           answer("Species", correct=TRUE),
+           answer("Sepal.Length", message="The str() function gives output that lists the type of variable next to the name of each variable.  Which one says Factor next to it?"),
+           answer("Sepal.Width", message="The str() function gives output that lists the type of variable next to the name of each variable.  Which one says Factor next to it?"),
+           answer("Petal.Length", message="The str() function gives output that lists the type of variable next to the name of each variable.  Which one says Factor next to it?"),
+           answer("Petal.Width", message="The str() function gives output that lists the type of variable next to the name of each variable.  Which one says Factor next to it?"),
+    allow_retry = TRUE,
+    random_answer_order = TRUE)
+)
+
+
+```
+
+
+Let's look at the first 6 rows of the iris data frame again.  Do you remember which function helps us do that?  Type in the code below.
+
+```{r head2, exercise=TRUE, message=FALSE}
 
 
 
-- Class: mult_question
-  Output: Which variable in the iris data frame is a factor? (you can scroll up through the console to see the results of the str() function)
-  AnswerChoices: Species;Sepal.Length;Sepal.Width;Petal.Length;Petal.Width
-  CorrectAnswer: Species
-  AnswerTests: omnitest(correctVal='Species')
-  Hint: The str() function gives output that lists the type of variable next to the name of each variable.  Which one says Factor next to it?
-
-- Class: cmd_question
-  Output: You can also use the View() function to see the whole dataset in a read-only spreadsheet form.  This is not practical for very large datasets but is fine for the iris dataset.  Type View(iris)
-  CorrectAnswer: View(iris)
-  AnswerTests: omnitest(correctExpr='View(iris)')
-  Hint: Type View(iris) and then press Enter.
-
-- Class: text
-  Output: Now that you know how to look at the structure of a data frame, you may have noticed that the iris data frame has a particular structure.  Each column is a variable with the name of the variable in the first row.  After the first row (which has the column names), each row contains the values for one flower (we call this an "observation").  Each cell has a single value in it.
-
-- Class: text
-  Output: We call this type of structure "tidy" data. This course focuses on using a group of packages called the "tidyverse" that all require data to be in "tidy" format.
-
-- Class: text
-  Output: Note that variable names should be kept as short as possible and cannot have any spaces or special characters.  See the resources for this lesson for more information.
-
-- Class: text
-  Output: For all the lessons in this course, we will use a simple spreadsheet file format called a comma-separated values file or csv file to import data.  This file type is the most commonly used and will work with any software that can handle spreadsheets.  For most software, you can use functions such as SaveAs, Download as, or Export and chose .csv as the file type to make a csv file.
-
-- Class: text
-  Output: We are going to use a package called readr from the tidyverse suite of packages to import data.  So first you have to load the readr package. (note that readr should have been installed for you when you loaded this course in swirl)
-
-- Class: cmd_question
-  Output: Type library(readr) to load the readr package
-  CorrectAnswer: library(readr)
-  AnswerTests: omnitest(correctExpr='library(readr)')
-  Hint: Type library(readr) in the console and then press Enter
+```
 
 
-- Class: cmd_question
-  Output: Use the read_csv() function to load the hemlocks_diam.csv file and assign it to an object named hemlocks by typing hemlocks <- read_csv("hemlock_diam.csv")
-  CorrectAnswer: hemlocks <- read_csv("hemlock_diam.csv")
-  AnswerTests: omnitest(correctExpr='hemlocks <- read_csv("hemlock_diam.csv")')
-  Hint: Type hemlocks <- read_csv("hemlock_diam.csv") then press Enter.  Type ?read_csv for more information about the read_csv function in the readr package.
+```{r head2-solution}
 
-- Class: text
-  Output: If your data imported and you gave the object the right name, it should show up in the Global Environment panel in the upper right.  It also shows the number of observations (=rows) and variables (=columns) there as well.
+head(iris)
 
-- Class: cmd_question
-  Output: How many rows are there in the hemlocks dataset? (type the number below)
-  CorrectAnswer: 298
-  AnswerTests: omnitest(correctExpr='298')
-  Hint: Look at the number of observations for the hemlocks object in the Global Environment
+```
 
-- Class: cmd_question
-  Output: How many columns are there in the hemlocks dataset? (type the number below)
-  CorrectAnswer: 7
-  AnswerTests: omnitest(correctExpr='7')
-  Hint: Look at the number of variables for the hemlocks object in the Global Environment
+```{r head2-check}
 
-- Class: cmd_question
-  Output: Look at the structure of the hemlocks dataset using the str() function
-  CorrectAnswer: str(hemlocks)
-  AnswerTests: omnitest(correctExpr='str(hemlocks)')
-  Hint: Type str(hemlocks)
+grade_this_code()
 
-- Class: mult_question
-  Output: What type is the "date" variable in the hemlocks data frame according to the str() function? (you can scroll up through the console to see the output from the previous code)
-  AnswerChoices: character (=chr);number (=num);factor (=Factor);logical (=logi); integer (=int); date (=date)
-  CorrectAnswer: character (=chr)
-  AnswerTests: omnitest(correctVal='character (=chr)')
-  Hint: Type in str(hemlocks) and look at the type listed next to date.
+```
 
-- Class: text
-  Output: Notice that some of the variables have the wrong type.  read_csv does its best to guess the right type for each column, but it doesn't always get them right.
+Now that you know how to look at the structure of a data frame, you may have noticed that the iris data frame has a particular structure.  Each column contains a variable with the name of the variable in the first row.  After the first row (which has the column names), each row contains the values for one flower (we call this an "observation").  Each cell has a single value in it.
 
-- Class: cmd_question
-  Output: To tell R the column called "date" is a date type this code in the console -- hemlocks <- read_csv("hemlock_diam.csv", col_types = cols(date = col_date(format = "%m/%d/%Y")))
-  CorrectAnswer: hemlocks <- read_csv("hemlock_diam.csv", col_types = cols(date = col_date(format = "%m/%d/%Y")))
-  AnswerTests: omnitest(correctExpr='hemlocks <- read_csv("hemlock_diam.csv", col_types = cols(date = col_date(format = "%m/%d/%Y")))')
-  Hint: Type this code in the console -- hemlocks <- read_csv("hemlock_diam.csv", col_types = cols(date = col_date(format = "%m/%d/%Y")))
+We call this type of structure "tidy" data. This course focuses on using a group of packages called the "tidyverse" that all require data to be in "tidy" format.
 
-- Class: cmd_question
-  Output: Look at the structure of the hemlocks dataset again using the str() function. (Hint - for a shortcut to code you previously typed in the console you can hit the up arrow key until you get to the code you want then edit if needed and press enter)
-  CorrectAnswer: str(hemlocks)
-  AnswerTests: omnitest(correctExpr='str(hemlocks)')
-  Hint: Type str(hemlocks) in the console and then hit Enter
+## Tidy Data
 
-- Class: text
-  Output: Note that the date column should now say it is a Date with the format "2016-03-08" etc.
+```{r tidydata, out.width = "100%"}
+knitr::include_graphics("images/tidydata_1.jpg")
+```
 
-- Class: text
-  Output: Also note that all the columns with letters or words in them are imported as character strings.  This may be fine, but there are also times when we want a variable to be a factor when we want to use that variable for particular kinds of analysis or graphs.
+Tidy Data illustration from: "Illustrations from the Openscapes blog [Tidy Data for reproducibility, efficiency, and collaboration](https://www.openscapes.org/blog/2020/10/12/tidy-data/) by Julia Lowndes and Allison Horst"
 
-- Class: cmd_question
-  Output: To tell R the column called "location" is a factor type this code into the console -- hemlocks <- read_csv("hemlock_diam.csv", col_types = cols(location = col_factor(), date = col_date(format = "%m/%d/%Y")))
-  CorrectAnswer: hemlocks <- read_csv("hemlock_diam.csv", col_types = cols(location = col_factor(), date = col_date(format = "%m/%d/%Y")))
-  AnswerTests: omnitest(correctExpr='hemlocks <- read_csv("hemlock_diam.csv", col_types = cols(location = col_factor(), date = col_date(format = "%m/%d/%Y")))')
-  Hint: Type this code in the console -- hemlocks <- read_csv("hemlock_diam.csv", col_types = cols(location = col_factor(), date = col_date(format = "%m/%d/%Y")))
 
-- Class: cmd_question
-  Output: Check the structure of the hemlocks data frame one last time using str() (remember - for a shortcut to code you previously typed in the console you can hit the up arrow key until you get to the code you want then edit if needed and press enter)
-  CorrectAnswer: str(hemlocks)
-  AnswerTests: omnitest(correctExpr='str(hemlocks)')
-  Hint: Type str(hemlocks)
+Note that variable names should be kept as short as possible and cannot have any spaces or special characters.  
 
-- Class: text
-  Output: Notice that now the location column is listed as being a factor with 4 levels (these are the 4 different locations represented by abbreviations)
+See this link for more information on what tidy data is and how to get your data in tidy format: [Tidy data](https://r4ds.had.co.nz/tidy-data.html#tidy-data-1)
 
-- Class: text
-  Output: Now that you have successfully imported a data file into R, you can use it to visualize or analyze the data.
 
-- Class: figure
-  Output: Look at the Plots window in the lower right panel (select the Plots tab) to see a graph of the relationship between the log of the height and log of the diameter of hemlock trees for each location.
-  Figure: tree.size.R
-  FigureType: new
 
-- Class: text
-  Output: If you complete the remaining lessons in this course, you will be able to make graphs like this too.  Keep up the good work and come back to refresh these data importing skills anytime.
+
+
+## Importing Data
+
+For all the tutorials in this course, we will use a simple spreadsheet file format called a comma-separated values file or **csv** file to import data.  This file type is the most commonly used and will work with any software that can handle spreadsheets.  For most software, you can use functions such as SaveAs, Download as, or Export and chose .csv as the file type to make a csv file.
+
+We are going to use a package called `readr` from the tidyverse suite of packages to import data. We will also use the `here` package to help us manage file paths so that R can find the right place where the data file is.
+
+To use these two packages, we have to load them with the `library()` function. (note that `readr` and `here` should have been installed for you when you loaded this course)
+
+```{r readr, exercise=TRUE, message=FALSE}
+library(readr)
+library(here)
+
+```
+
+Use the `read_csv()` function from the `readr` package along with the `here()` function from the `here` package to load the "hemlocks_diam.csv" file and assign it to an object named hemlocks by running the code below.
+
+
+
+```{r import2, exercise=TRUE, message=FALSE, exercise.setup = "readr"}
+
+hemlocks <- read_csv(here("data/hemlock_diam.csv"))
+
+```
+
+The way you assign a value or result to an object in R is by using the **assignment operator**, which is a ''less than'' symbol followed by a ''minus'' sign. It looks like this: `<-`
+
+Think of the assignment operator as an arrow. You are assigning the result of the code on the right side of the arrow to the object name on the left side of the arrow.
+
+We import the csv file into R with `read_csv` (and using `here` to help us simplify file paths), but in order to do other things with the data we imported we have to give it a name by using the assignment operator.
+
+Notice that nothing printed out as a result of the code we ran above.  To look at the `hemlocks` object that we just created by importing the data, we have to use other functions to look at the structure of the data. We will do this in the next section
+
+
+Here are some resources to help you learn more
+
+* [Difference between assignment operators in R](https://renkun.me/2014/01/28/difference-between-assignment-operators-in-r/)
+* [here package](https://here.r-lib.org/)
+* [readr package](https://readr.tidyverse.org/)
+
+
+## Hemlocks dataset
+
+Use the code chunk below to play around with any of the functions we have learned about to look at the structure of the data we imported and called `hemlocks` (examples include `dim()`, `names()`, `head()`, `str()`) and then answer the questions below.
+
+```{r hemlocks, include=FALSE, message=FALSE}
+
+library(readr)
+library(here)
+hemlocks <- read_csv(here("data/hemlock_diam.csv"))
+
+```
+
+
+
+```{r play, exercise=TRUE, exercise.setup = "hemlocks"}
+
+
+
+
+```
+
+
+```{r hemlocks_quiz}
+
+quiz(
+  question("How many rows are there in the hemlocks dataset?",
+           answer("7"),
+           answer("297"),
+           answer("298", correct=TRUE, message="You got it!"),
+           answer("4"),
+           incorrect = "Don't forget to use the code chunk above to explore the structure of the hemlocks dataset",
+           allow_retry = TRUE,
+           random_answer_order = TRUE),
+  question("How many columns are there in the hemlocks dataset?",
+           answer("7", correct=TRUE),
+           answer("297"),
+           answer("298"),
+           answer("4"),
+           incorrect = "Don't forget to use the code chunk above to explore the structure of the hemlocks dataset",
+           allow_retry = TRUE,
+           random_answer_order = TRUE),
+  question("What type is the **date** variable in the hemlocks dataset?",
+           answer("number (=num)"),
+           answer("factor (=Factor)"),
+           answer("character (=chr)", correct=TRUE, message="Excellent work!"),
+           answer("date (=date)"),
+           answer("interger (=int)"),
+           incorrect = "try head(hemlocks) or str(hemlocks) in the code chunk above",
+           allow_retry = TRUE,
+           random_answer_order = TRUE)
+)
+
+```
+
+
+Notice that some of the variables have the wrong type.  `read_csv()` does its best to guess the right type for each column, but it doesn't always get them right.  It definitely got the data type for **date** wrong.
+
+## Setting Data Types fo Variables
+
+We can set the correct data type for a variable when we import using `read_csv()` by also using `col_types()`.  Let's set the **date** variable as an actual date data type by running the code below
+
+```{r import3, exercise=TRUE, message=FALSE}
+
+hemlocks <- read_csv(here("data/hemlock_diam.csv"),
+                     col_types = cols(date = col_date(format = "%m/%d/%Y")))
+
+```
+
+
+Look at the structure of the hemlocks dataset again by using the code chunk below 
+
+```{r play2, exercise=TRUE, exercise.setup = "import3"}
+
+
+
+
+```
+
+
+The date column should now say it is a Date with values that look like "2016-03-09" etc.
+
+
+## 
+
+You may have noticed that all the columns with letters or words in them in the `hemlocks` dataset are imported as character strings.  This may be fine, but there are also times when we want a variable to be a factor when we want to use that variable for particular kinds of analysis or graphs.
+
+Tell R the column called "location" is a factor and then look at the structure with `str()` by running the code below
+
+```{r import4, exercise=TRUE, message=FALSE}
+
+hemlocks <- read_csv(here("data/hemlock_diam.csv"),
+                     col_types = cols(
+                       location = col_factor(), 
+                       date = col_date(format = "%m/%d/%Y")))
+
+str(hemlocks)
+
+```
+
+
+Notice that now the location column is listed as being a factor with 4 levels (these are the 4 different locations represented by abbreviations)
+
 
 ## Conclusion
 
+Now that you have successfully imported a data file into R, you can use it to visualize or analyze the data like the example graph of the relationship between the log of the height and log of the diameter of hemlock trees for each location shown below.
 
 
+```{r treesize, echo=FALSE, message=FALSE}
+
+
+hemlocks <- read_csv(here("data/hemlock_diam.csv"),
+                     col_types = cols(
+                       location = col_factor(), 
+                       date = col_date(format = "%m/%d/%Y")))
+
+hemlocks %>% 
+  filter(!is.na(height)) %>% 
+    ggplot(aes(x=diameter, y=height, color=location)) +
+  geom_point(size=2, alpha=0.75) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_x_log10() +
+  scale_y_log10() +
+  xlab("Diameter (cm)") +
+  ylab("Height (cm)") +
+  coord_cartesian(expand=TRUE) +
+  theme_classic(base_size=18) +
+  annotation_logticks()
+
+```
+
+
+If you complete the remaining lessons in this course, you will be able to make graphs like this too.  Keep up the good work and come back to refresh these data importing skills anytime.
 
 
 ## References
 
 
-### Functions in R to look at the structure of data frames
+### Some useful functions in R to look at the structure of data frames
 
 * `dim()`  gives the dimensions (rows and columns) of a data frame
 * `names()` gives the names of the variables in a data frame (the first row of all the columns)
 * `head()` gives the first few rows of the data frame
 * `str()` gives the structure of the data frame including the type of object, the number of rows and columns, and lists each variable with its type and first few values
-* `glimpse()` function in the `dplyr` package is similar to the `str()` function
 
 
 ### Resources to help get data into R
@@ -283,6 +393,6 @@ The `str()` function gives the type of object and then the number of rows and co
 * [Importing and "Tidy" Data](https://moderndive.com/4-tidy.html): ModernDive chapter on importing and tidy data
 * [Tidy data](https://r4ds.had.co.nz/tidy-data.html#tidy-data-1): what tidy data is and how to get your data in tidy format
 * [Data Import](https://r4ds.had.co.nz/data-import.html): help with importing data using the tidyverse readr package
-* [Introduction to readr](https://readr.tidyverse.org/articles/readr.html): how to you the readr package to import data into R
-
+* [Introduction to readr](https://readr.tidyverse.org/articles/readr.html): how to use the readr package to import data into R
+* [here package](https://here.r-lib.org/): use here to help with file paths so you can get to files easily
 
