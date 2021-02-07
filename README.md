@@ -2,7 +2,7 @@
 
 ### by Marney Pratt
 
-### Last updated on February 2, 2021
+### Last updated on February 6, 2021
 
 ## Why use learnr to learn R?
 
@@ -26,6 +26,7 @@ Install or update the following packages by copying the code below, pasting in t
 install.packages("tidyverse")   
 install.packages("ggfortify")   
 install.packages("ggbeeswarm")  
+install.packages("here")
 install.packages("learnr") 
 install.packages("devtools")
 devtools::install_github('rstudio/htmltools')
@@ -44,4 +45,11 @@ Here is a list of the tutorials available so far:
 * how to install and load packages
 * Understand what a function is and how to use a function's help page
 * Use the `head()` function to look at data frames   
+
+2. **Getting Data into R**
+
+* Learn about objects and data types in R
+* Use several functions to help investigate the structure of a data frame
+* Understand what tidy data is
+* Practice importing a csv file
 
